@@ -19,7 +19,7 @@ After both runs the tuned model is promoted to models/production_model.pkl.
 Usage
 ─────
     python -m run_training          # train and log
-    mlflow server --host 127.0.0.1 --port 5000 or use mlflow server --host 127.0.0.1 --port 5001  # start tracking UI  
+    mlflow server --host 127.0.0.1 --port 5000  # start tracking UI  
     open http://localhost:5000                  # inspect runs
 """
 
@@ -91,8 +91,7 @@ def build_configs(best_params: dict) -> dict:
             "tuned_best": {"model": xgb, "params": xgb_mlflow_params}
             }
 
-
-if __name__ == "__main__":
+def run_model_train():
     # ── Load & split ──────────────────────────────────────────────────────────
     print(f"Loading {FEATURES_FILE} ...")
     X, y = load_features(FEATURES_FILE)
@@ -106,7 +105,7 @@ if __name__ == "__main__":
     with open(params_path) as f:
         best_params = json.load(f)
     logger.info("Loaded best params from %s", params_path)
-
+    
     # ── MLflow setup ──────────────────────────────────────────────────────────
     # tell MLflow where to persist run data to a local file system in mlruns directory
     # In production you'd swap this for a remote server URI.                                                 
@@ -156,10 +155,10 @@ if __name__ == "__main__":
     prod_path = MODELS_DIR / "production_model.pkl"
     joblib.dump(trained["tuned_best"], prod_path)
     print(f"Production model saved → {prod_path}")
-
+    
+if __name__ == "__main__":
+    run_model_train()
     # ── Instructions to open the UI ───────────────────────────────────────────
-    print(
-        f"\nTo view all runs in the MLflow UI:\n"
+    print(f"\nTo view all runs in the MLflow UI:\n"
         f"  mlflow server --host 127.0.0.1 --port 5000\n"
-        f"  open http://localhost:5000"
-    )
+        f"  open http://localhost:5000")

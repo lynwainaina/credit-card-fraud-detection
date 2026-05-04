@@ -111,8 +111,7 @@ def evaluate(model: XGBClassifier, X_test, y_test) -> dict:
     print(f"AUC-ROC  : {metrics['auc_roc']:.4f}")
     return metrics
 
-
-if __name__ == "__main__":
+def run_tuning()-> None:
     # ── Load training data and split to train and test
     print(f"Loading {FEATURES_FILE} ...")
     X, y = load_features(FEATURES_FILE)
@@ -124,10 +123,15 @@ if __name__ == "__main__":
     print(f"  Train: {len(X_train):,}  |  Test: {len(X_test):,}\n")
     scale_pos_weight = n_neg / n_pos
     cv = StratifiedKFold(n_splits=CV_FOLDS, shuffle=True, random_state=42)
-    
+    return {"x_train": X_train, "x_test": X_test, "y_train": y_train, "y_test": y_test, "scale_pos": scale_pos_weight, "cv": cv}
+
+def run_optuna_study()-> dict:
+    X_train = run_tuning()["x_train"]
+    y_train = run_tuning()["y_train"]
+    scale_pos_weight = run_tuning()["scale_pos"]
+    cv = run_tuning()["cv"]
     # ── Optuna study ──────────────────────────────────────────────────────────
     print(f"Starting Optuna search ({N_TRIALS} trials, {CV_FOLDS}-fold CV) ...")
-    print("-" * 60)
     # create_study - primary method for initializing a new Study object in Optuna, which manages the hyperparameter optimization process. 
     # storage - Defines where trial history is saved. None (default): Uses InMemoryStorage. Results are lost once the program terminates
     # direction - Sets the optimization goal, "maximize": Optimization aims for the highest objective value.
@@ -138,12 +142,14 @@ if __name__ == "__main__":
     # n_trials: The total number of trials to run.
     study.optimize(make_objective(X_train, y_train, scale_pos_weight, cv),
                    n_trials=N_TRIALS, show_progress_bar=True)
-    print("-" * 60)
     print(f"\nBest trial: #{study.best_trial.number}")
     print(f"  CV AUC: {study.best_value:.4f}")
-    
+    return study.best_params
+
+def save_best_params() -> None:
     # ── Save best hyperparameters ─────────────────────────────────────────────
-    best_params = dict(study.best_params)
+    scale_pos_weight = run_tuning()["scale_pos"]
+    best_params = run_optuna_study()
     best_params["scale_pos_weight"] = scale_pos_weight
 
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
@@ -152,8 +158,15 @@ if __name__ == "__main__":
         json.dump(best_params, f, indent=2)
     print(f"\nBest hyperparameters saved → {params_path}")
     print(json.dumps(best_params, indent=2))
+    
+    return best_params
 
+
+def train_save_final_model() -> None:
+    best_params = save_best_params()
     # ── Train final model with best params ────────────────────────────────────
+    X_train = run_tuning()["x_train"]
+    y_train = run_tuning()["y_train"]
     print("\nTraining final XGBoost with best hyperparameters ...")
     final_model = XGBClassifier(
         **best_params,
@@ -162,17 +175,22 @@ if __name__ == "__main__":
         random_state=42,
     )
     final_model.fit(X_train, y_train)
-
+    
     # ── Evaluate on test set and save metrics ──────────────────────────────────────────────────
+    X_test = run_tuning()["x_test"]
+    y_test = run_tuning()["y_test"]
     print("\nTest-set metrics (tuned model):")
-    print("")
     metrics_path = MODELS_DIR / "tuned_model_metrics.json"
     metric = evaluate(final_model, X_test, y_test)
     with open(metrics_path, "w") as f:
         json.dump(metric, f, indent=2)
     
-
-    # ── Save tuned model ──────────────────────────────────────────────────────
+    # ── Save tuned model ─────────────────────────────────────────────────────
     model_path = MODELS_DIR / "tuned_model.pkl"
     joblib.dump(final_model, model_path)
     print(f"\nTuned model saved → {model_path}")
+    
+if __name__ == "__main__":
+    save_best_params()
+    train_save_final_model()
+    

@@ -68,18 +68,21 @@ def save_model(model: LogisticRegression, filename: str = "baseline.pkl") -> Pat
     logger.info("Model saved to %s", path)
     return path
 
-
-if __name__ == "__main__":
+def run_baseline()-> None:
     print("Loading features.csv ...")
     X, y = load_features(features_file)
     print(f"  {len(X):,} rows, {X.shape[1]} features, "
           f"{int(y.sum()):,} positives ({y.mean() * 100:.3f}%)")
     # split to train and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    print(f"\nTrain: {len(X_train):,} rows  |  Test: {len(X_test):,} rows")
-    print("\nTraining LogisticRegression ...")
+    print(f"\nTrain: {len(X_train):,} rows  |  Test: {len(X_test):,} rows \nTraining LogisticRegression ...")
     model = train(X_train, y_train)
     print("\nTest-set metrics:")
     evaluate(model, X_test, y_test)
     out = save_model(model)
     print(f"\nModel saved → {out}")
+
+    
+if __name__ == "__main__":
+    run_baseline()
+
