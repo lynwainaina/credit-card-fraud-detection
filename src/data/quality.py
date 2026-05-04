@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 import pandas as pd
 from dotenv import load_dotenv
-from loader import load_csv
+from src.data.loader import load_csv
 
 
 # Load variables from the .env file at the project root into os.environ

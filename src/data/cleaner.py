@@ -117,11 +117,9 @@ def clean_data(df: pd.DataFrame,target_col: str = None,time_series: bool = False
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Clean a raw CSV dataset from data/")
     parser.add_argument("filename",nargs="?", default="creditcard.csv",
-                        help="CSV filename inside data/ (e.g. creditcard.csv). Defaults to creditcard.csv.",
-    )
+                        help="CSV filename inside data/ (e.g. creditcard.csv). Defaults to creditcard.csv.")
     parser.add_argument("--time-series",action="store_true",
-                        help="Forward-fill non-target columns instead of dropping rows with nulls.",
-    )
+                        help="Forward-fill non-target columns instead of dropping rows with nulls.")
     args = parser.parse_args()
 
     raw_df = load_csv(args.filename)
