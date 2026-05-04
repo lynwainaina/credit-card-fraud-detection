@@ -149,6 +149,27 @@ def select_features(df: pd.DataFrame, corr_threshold: float = 0.95, var_multipli
                 "(%d dropped for correlation, %d for low variance).", len(selected), len(cols), len(to_drop), len(low_var))
     return selected, df[selected]
 
+def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Engineer new features from the cleaned credit card transactions DataFrame.
+    Args:
+        df: Cleaned DataFrame with columns Time, V1-V28, Amount, and
+            optionally Class.
+    Returns:
+        New DataFrame containing the original columns plus 11 engineered
+        features (5 domain-specific, 3 statistical, 3 interaction).
+    """
+    raw = df.copy()
+    # Create new features
+    engineered = create_features(raw)
+    new_cols = [c for c in engineered.columns if c not in raw.columns]
+    print(f"\nEngineered features ({len(new_cols)}):")
+    for col in new_cols:
+        s = engineered[col]
+        print(f"  {col:<25}  min={s.min():>10.4f}  max={s.max():>10.4f}  mean={s.mean():>10.4f}")
+    print(f"\nFinal shape: {engineered.shape[0]:,} rows x {engineered.shape[1]} columns")
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run feature engineering on a cleaned CSV dataset from data/")                                  
     parser.add_argument("filename", nargs="?", default="cleaned.csv",
@@ -156,11 +177,5 @@ if __name__ == '__main__':
     args = parser.parse_args()  
     raw = load_csv(args.filename)                                                                                       
     print(f"Loaded '{args.filename}': {len(raw):,} rows x {raw.shape[1]} columns") 
-    engineered = create_features(raw)
-    new_cols = [c for c in engineered.columns if c not in raw.columns]
-    print(f"\nEngineered features ({len(new_cols)}):")
-    for col in new_cols:
-        s = engineered[col]
-        print(f"  {col:<25}  min={s.min():>10.4f}  max={s.max():>10.4f}  mean={s.mean():>10.4f}")
-
-    print(f"\nFinal shape: {engineered.shape[0]:,} rows x {engineered.shape[1]} columns")
+    engineer_features(raw)
+    
