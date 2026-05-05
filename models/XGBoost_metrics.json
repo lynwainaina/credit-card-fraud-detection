@@ -1,0 +1,6 @@
+{
+  "CV AUC Mean": 0.9774,
+  "Test AUC-ROC": 0.9668,
+  "Test Recall": 0.7684,
+  "Test F1": 0.8488
+}
