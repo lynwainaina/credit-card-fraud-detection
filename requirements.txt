@@ -1,0 +1,27 @@
+# Core data
+numpy==1.23.5
+pandas==2.0.3
+
+# ML
+scikit-learn==1.3.1
+xgboost==3.2.0
+lightgbm==4.6.0
+joblib==1.3.2
+
+# Experiment tracking & tuning
+mlflow==3.5.1
+optuna==4.4.0
+
+# Serving
+fastapi==0.99.1
+uvicorn==0.23.2
+pydantic==1.10.12
+
+# Dashboard
+streamlit==1.27.2
+plotly==5.17.0
+
+# Dev / CI
+pytest==7.4.4
+ruff==0.11.13
+python-dotenv==1.0.0
