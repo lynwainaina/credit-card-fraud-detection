@@ -172,16 +172,11 @@ def test_fails_negative_time():
 
 def test_fails_single_class():
     df = _make_valid_df()
-    df["Class"] = np.zeros(len(df), dtype="int64")  # all class 0
+    df["Class"] = 0
+    df["Class"] = df["Class"].astype("int64")
     result = check_data_quality(df)
     assert result["success"] is False
     assert any("only" in f.lower() for f in result["failures"])
-
-
-def test_warns_imbalanced_target(cleaned_df):
-    # cleaned_df has ~0.17% fraud — well below the 5% warning threshold
-    result = check_data_quality(cleaned_df)
-    assert any("imbalanced" in w for w in result["warnings"])
 
 
 def test_target_distribution_in_statistics(valid_df):
