@@ -29,6 +29,18 @@ jobs:
 
       - name: Run tests
         run: pytest tests/ -v
+        env: 
+            REQUIRED_SCHEMA: ${{ secrets.REQUIRED_SCHEMA }}
+            TARGET_COL: ${{ secrets.TARGET_COL }}
+            NUMERIC_BOUNDS: ${{ secrets.NUMERIC_BOUNDS }}
+            IMBALANCE_WARN_THRESHOLD: ${{ secrets.IMBALANCE_WARN_THRESHOLD }}
+            NULL_CRITICAL_THRESHOLD: ${{ secrets.NULL_CRITICAL_THRESHOLD }}
+            NULL_WARN_THRESHOLD: ${{ secrets.NULL_WARN_THRESHOLD }}
+            TOP_SIGNAL: ${{ secrets.TOP_SIGNAL }}
+            FEATURES_FILE: ${{ secrets.FEATURES_FILE }}
+            N_TRIALS: ${{ secrets.N_TRIALS }}
+            CV_FOLDS: ${{ secrets.CV_FOLDS }}
+            MLFLOW_EXPERIMENT: ${{ secrets.MLFLOW_EXPERIMENT }}
 
   lint:
     name: Lint
