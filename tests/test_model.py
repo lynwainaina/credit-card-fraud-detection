@@ -8,7 +8,7 @@ from src.models.train_models import build_models, _test_metrics, save_model
 
 ROOT = Path(__file__).parents[1]
 PRODUCTION_MODEL_PATH = ROOT / "models" / "production_model.pkl"
-FEATURES_CSV = ROOT / "data" / "features.csv"
+FEATURES_CSV = ROOT / "data" / "sample_features.csv"
 
 
 @pytest.fixture(scope="module")

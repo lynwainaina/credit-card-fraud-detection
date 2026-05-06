@@ -13,7 +13,11 @@ ROOT = Path(__file__).parents[1]
 
 @pytest.fixture(scope="module")
 def cleaned_df():
-    return pd.read_csv(ROOT / "data" / "cleaned.csv")
+    # use sample_features data which is a subset of the cleaned data
+    df = pd.read_csv(ROOT / "data" / "sample_features.csv")
+    df = df[["Time","V1","V2","V3","V4","V5","V6","V7","V8","V9","V10","V11","V12","V13","V14","V15","V16","V17","V18",
+             "V19","V20","V21","V22","V23","V24","V25","V26","V27","V28","Amount","Class"]]
+    return df
 
 
 def _make_valid_df(n: int = 1000, fraud_frac: float = 0.05) -> pd.DataFrame:
