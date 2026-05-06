@@ -228,7 +228,7 @@ def print_quality_report(result: dict) -> None:
         print("\n  All checks passed with no warnings.")
 
     stats = result["statistics"]
-    print(f"\nStatistics:")
+    print("\nStatistics:")
     print(f"  Rows        : {stats['total_rows']:,}")
     print(f"  Columns     : {stats['total_columns']}")
 

@@ -196,13 +196,13 @@ def callout(body: str, variant: str = "amber", icon: str = "💡") -> None:
 
 
 def chart_layout(fig, height: int = 360, margins: tuple = (20, 20, 40, 20)) -> go.Figure:
-    t, b, l, r = margins
+    t, b, left, right = margins
     fig.update_layout(
         template=TMPL,
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
         height=height,
-        margin=dict(t=t, b=b, l=l, r=r),
+        margin=dict(t=t, b=b, l=left, r=right),
         font=dict(family="Inter, Helvetica, sans-serif"),
     )
     return fig

@@ -96,7 +96,6 @@ def run_model_train():
     print(f"Loading {FEATURES_FILE} ...")
     X, y = load_features(FEATURES_FILE)
     n_pos = int(y.sum())
-    n_neg = len(y) - n_pos
     print(f" {len(X):,} rows | {X.shape[1]} features | {n_pos:,} fraud ({y.mean() * 100:.3f}%)\n")
     # stratify=y preserves the 0.17% fraud ratio in both splits
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
@@ -159,6 +158,6 @@ def run_model_train():
 if __name__ == "__main__":
     run_model_train()
     # ── Instructions to open the UI ───────────────────────────────────────────
-    print(f"\nTo view all runs in the MLflow UI:\n"
-        f"  mlflow server --host 127.0.0.1 --port 5000\n"
-        f"  open http://localhost:5000")
+    print("\nTo view all runs in the MLflow UI:\n"
+        "  mlflow server --host 127.0.0.1 --port 5000\n"
+        "  open http://localhost:5000")

@@ -35,7 +35,6 @@ import os
 import time
 import joblib
 import json
-import numpy as np
 import pandas as pd
 from pathlib import Path
 from dotenv import load_dotenv

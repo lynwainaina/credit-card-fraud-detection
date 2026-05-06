@@ -10,9 +10,7 @@ from __future__ import annotations
 import logging
 import numpy as np
 import pandas as pd
-import sys
 import argparse
-from pathlib import Path
 from src.data.loader import load_csv
 
 
