@@ -1,8 +1,10 @@
 # Credit Card Fraud Detection
 
 > End-to-end ML pipeline that detects fraudulent credit card transactions served via a Streamlit dashboard and a FastAPI REST endpoint, containerised with Docker.
+<!-- **Live Demo:** [https://credit-card-fraud-detection-dashboardreport.streamlit.app/](#) -->
+[![Streamlit App](https://credit-card-fraud-detection-dashboardreport.streamlit.app/)](YOUR_STREAMLIT_APP_URL)
 
-**Live Demo:** [https://credit-card-fraud-detection-dashboardreport.streamlit.app/](#)
+
 
 ---
 
